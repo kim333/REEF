@@ -67,6 +67,17 @@ public class DataLoadingREEF {
   @NamedParameter(short_name = "input")
   public static final class InputDir implements Name<String> {
   }
+  
+  @NamedParameter(short_name = "learnRate", default_value = "0.5")
+  public static final class LearnRate implements Name<Double> {
+  }
+  @NamedParameter(short_name = "numParam", default_value = "10")
+  public static final class NumParam implements Name<Integer> {
+  }
+  @NamedParameter(short_name = "targetParam", default_value = "10")
+  public static final class TargetParam implements Name<Integer> {
+  }
+  
 
   public static void main(final String[] args)
       throws InjectionException, BindException, IOException {
@@ -79,6 +90,9 @@ public class DataLoadingREEF {
         .registerShortNameOfClass(Local.class)
         .registerShortNameOfClass(TimeOut.class)
         .registerShortNameOfClass(DataLoadingREEF.InputDir.class)
+        .registerShortNameOfClass(LearnRate.class)
+        .registerShortNameOfClass(NumParam.class)
+        .registerShortNameOfClass(TargetParam.class)
         .processCommandLine(args);
 
     final Injector injector = tang.newInjector(cb.build());

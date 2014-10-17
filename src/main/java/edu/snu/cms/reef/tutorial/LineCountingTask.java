@@ -20,6 +20,11 @@ import com.microsoft.reef.io.data.loading.api.DataSet;
 import com.microsoft.reef.io.network.util.Utils;
 import com.microsoft.reef.io.network.util.Utils.Pair;
 import com.microsoft.reef.task.Task;
+import com.microsoft.tang.annotations.Parameter;
+
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.LearnRate;
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.NumParam;
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.TargetParam;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -39,13 +44,31 @@ public class LineCountingTask implements Task {
   private static final Logger LOG = Logger.getLogger(LineCountingTask.class.getName());
 
   private final DataSet<LongWritable, Text> dataSet;
-
+  private SGD_Linear sgd = new SGD_Linear();
+  private double [] hypo;
+  private double learnRate;
+  private int numParam;
+  private int targetParam;
+  private double [] attr;
+  private String [] attrStr;
   @Inject
-  public LineCountingTask(final DataSet<LongWritable, Text> dataSet) {
+  public LineCountingTask(final DataSet<LongWritable, Text> dataSet,
+		  				  final @Parameter(LearnRate.class) int learnRate,
+		  				  final @Parameter(NumParam.class) int numParam,
+		  				  final @Parameter(TargetParam.class) int targetParam) {
     this.dataSet = dataSet;
+    this.learnRate = learnRate;
+    this.numParam = numParam;
+    this.targetParam = targetParam;
+    hypo = new double[numParam];
+    for(int i = 0; i < numParam; i ++){
+    	hypo[i] = 0;
+    }
+    
+    attr =  new double[numParam];
   }
 
-  @Override
+  @Override 
   public byte[] call(final byte[] memento) throws Exception {
     LOG.log(Level.FINER, "LineCounting task started");
     int numEx = 0;
@@ -53,7 +76,15 @@ public class LineCountingTask implements Task {
       // LOG.log(Level.FINEST, "Read line: {0}", keyValue);
       ++numEx;
       System.out.println("Dataset "+ numEx + " = " + keyValue.first.toString() + " , " + keyValue.second.toString());
-
+      attrStr = keyValue.second.toString().split(",");
+      
+      for(int i=0; i < numParam; i++){
+    	  attr[i] = Double.parseDouble(attrStr[i].trim());
+      }
+      
+      for(int i =0; i<  numParam; i++){
+    	 hypo[i] = sgd.hypothesis(attr, hypo, i, targetParam, learnRate);
+      }
     }
     LOG.log(Level.FINER, "LineCounting task finished: read {0} lines", numEx);
     return Integer.toString(numEx).getBytes();
