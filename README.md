@@ -5,16 +5,28 @@ REEF
 Used Data Set
 =======
 UCI Machine Learning Repository
-http://archive.ics.uci.edu/ml/datasets/3D+Road+Network+%28North+Jutland%2C+Denmark%29
+http://archive.ics.uci.edu/ml/datasets/Physicochemical+Properties+of+Protein+Tertiary+Structure
 
-3D Road Network (North Jutland, Denmark) Data Set 
+Physicochemical Properties of Protein Tertiary Structure Data Set 
 
 Attribute Information:
 
-1. OSM_ID: OpenStreetMap ID for each road segment or edge in the graph. 
+RMSD-Size of the residue. 
 
-2. LONGITUDE: Web Mercaptor (Google format) longitude 
+F1 - Total surface area. 
 
-3. LATITUDE: Web Mercaptor (Google format) latitude 
+F2 - Non polar exposed area. 
 
-4. ALTITUDE: Height in meters. 
+F3 - Fractional area of exposed non polar residue. 
+
+F4 - Fractional area of exposed non polar part of residue. 
+
+F5 - Molecular mass weighted exposed area. 
+
+F6 - Average deviation from standard exposed area of residue. 
+
+F7 - Euclidian distance. 
+
+F8 - Secondary structure penalty. 
+
+F9 - Spacial Distribution constraints (N,K Value).
