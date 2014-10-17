@@ -31,9 +31,14 @@ import com.microsoft.reef.io.data.loading.api.DataLoadingService;
 import com.microsoft.reef.poison.PoisonedConfiguration;
 import com.microsoft.tang.Configuration;
 import com.microsoft.tang.Tang;
+import com.microsoft.tang.annotations.Parameter;
 import com.microsoft.tang.annotations.Unit;
 import com.microsoft.tang.exceptions.BindException;
 import com.microsoft.wake.EventHandler;
+
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.LearnRate;
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.NumParam;
+import edu.snu.cms.reef.tutorial.DataLoadingREEF.TargetParam;
 
 /**
  * Driver side for the line counting demo that uses the data loading service.
@@ -49,11 +54,21 @@ public class LineCounter {
   private final AtomicInteger completedDataTasks = new AtomicInteger();
 
   private final DataLoadingService dataLoadingService;
+  
+  private double learnRate;
+  private int numParam;
+  private int targetParam;
 
   @Inject
-  public LineCounter(final DataLoadingService dataLoadingService) {
+  public LineCounter(final DataLoadingService dataLoadingService,
+		  			 final @Parameter(LearnRate.class) double learnRate,
+		  			 final @Parameter(NumParam.class) int numParam,
+		  			 final @Parameter(TargetParam.class) int targetParam) {
     this.dataLoadingService = dataLoadingService;
     this.completedDataTasks.set(dataLoadingService.getNumberOfPartitions());
+    this.learnRate = learnRate;
+    this.numParam = numParam;
+    this.targetParam = targetParam;
   }
 
   public class ContextActiveHandler implements EventHandler<ActiveContext> {

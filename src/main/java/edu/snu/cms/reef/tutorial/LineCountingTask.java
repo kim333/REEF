@@ -53,7 +53,7 @@ public class LineCountingTask implements Task {
   private String [] attrStr;
   @Inject
   public LineCountingTask(final DataSet<LongWritable, Text> dataSet,
-		  				  final @Parameter(LearnRate.class) int learnRate,
+		  				  final @Parameter(LearnRate.class) double learnRate,
 		  				  final @Parameter(NumParam.class) int numParam,
 		  				  final @Parameter(TargetParam.class) int targetParam) {
     this.dataSet = dataSet;
