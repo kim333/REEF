@@ -37,8 +37,6 @@ public class ControllerTask implements Task {
 	Broadcast.Sender<Vector> broadcastSender;
 	Reduce.Receiver<Vector> reduceReceiver;
 	int numParam;
-	// The matrices
-	List<Vector> X, A;
 
 	// We compute AX'
 
@@ -64,24 +62,15 @@ public class ControllerTask implements Task {
 		this.numParam = numParam;
 	}
 
-	/**
-	 * Computes AX'
-	 */
 	@Override
 	public byte[] call(byte[] memento) throws Exception {
-		// Scatter the matrix A
-	  logger.log(Level.FINE, "Scattering A");
 	    int iter = 20;
 	    
 		Vector result = new DenseVector(numParam);
 		Vector Ax;
 
-		// Just use Iterable with a Matrix class
+
 		for (int i=0; i < iter;i++){
-			// Broadcast each column
-			//broadcastSender.send(x);
-			// Receive a concatenated vector of the
-			// partial sums computed by each computeTask
 			// Accumulate the result
 			Ax = reduceReceiver.reduce();
 			result.add(Ax);

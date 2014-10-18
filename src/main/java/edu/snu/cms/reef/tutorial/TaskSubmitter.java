@@ -238,7 +238,8 @@ public class TaskSubmitter implements EventHandler<Iterable<ActiveContext>> {
    */
   public void submitControlTask() {
     try {
-      final JavaConfigurationBuilder b = Tang.Factory.getTang().newConfigurationBuilder();
+      final JavaConfigurationBuilder b = Tang.Factory.getTang().newConfigurationBuilder()
+    		  .bindNamedParameter(NumParam.class, ""+numParam);
       b.addConfiguration(operators.getConfig(controllerId));
       b.addConfiguration(TaskConfiguration.CONF
           .set(TaskConfiguration.IDENTIFIER, controllerId.toString())
