@@ -105,12 +105,4 @@ public class ComputeTask implements Task{
 		return null;
 	}
 
-	private Vector computeAx(List<Vector> partialA, Vector x) {
-		Vector result = new DenseVector(partialA.size());
-		int i = 0;
-		for (Vector row : partialA) {
-			result.set(i++, row.dot(x));
-		}
-		return result;
-	}
 }

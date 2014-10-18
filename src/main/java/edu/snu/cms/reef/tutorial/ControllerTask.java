@@ -6,8 +6,10 @@ import com.microsoft.reef.task.Task;
 import com.microsoft.reef.io.network.group.operators.Broadcast;
 import com.microsoft.reef.io.network.group.operators.Reduce;
 import com.microsoft.reef.io.network.group.operators.Scatter;
+import com.microsoft.tang.annotations.Parameter;
 
 import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,7 +36,7 @@ public class ControllerTask implements Task {
 	Scatter.Sender<Vector> scatterSender;
 	Broadcast.Sender<Vector> broadcastSender;
 	Reduce.Receiver<Vector> reduceReceiver;
-
+	int numParam;
 	// The matrices
 	List<Vector> X, A;
 
@@ -53,12 +55,13 @@ public class ControllerTask implements Task {
 	@Inject
 	public ControllerTask(Scatter.Sender<Vector> scatterSender,
                         Broadcast.Sender<Vector> broadcastSender,
-                        Reduce.Receiver<Vector> reduceReceiver) {
+                        Reduce.Receiver<Vector> reduceReceiver,
+                        final @Parameter(MatMultDriver.Parameters.NumParam.class) int numParam) {
 		super();
 		this.scatterSender = scatterSender;
 		this.broadcastSender = broadcastSender;
 		this.reduceReceiver = reduceReceiver;
-
+		this.numParam = numParam;
 	}
 
 	/**
@@ -69,16 +72,18 @@ public class ControllerTask implements Task {
 		// Scatter the matrix A
 	  logger.log(Level.FINE, "Scattering A");
 	    int iter = 20;
-	    int i =0;
-		List<Vector> result = new ArrayList<>();
+	    
+		Vector result = new DenseVector(numParam);
+		Vector Ax;
+
 		// Just use Iterable with a Matrix class
-		while (i < iter){
+		for (int i=0; i < iter;i++){
 			// Broadcast each column
 			//broadcastSender.send(x);
 			// Receive a concatenated vector of the
 			// partial sums computed by each computeTask
-			Vector Ax = reduceReceiver.reduce();
 			// Accumulate the result
+			Ax = reduceReceiver.reduce();
 			result.add(Ax);
 		}
 

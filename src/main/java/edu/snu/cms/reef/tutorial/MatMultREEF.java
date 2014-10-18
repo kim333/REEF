@@ -8,7 +8,6 @@ import com.microsoft.reef.client.LauncherStatus;
 import com.microsoft.reef.driver.evaluator.EvaluatorRequest;
 import edu.snu.cms.reef.tutorial.MatMultDriver;
 import com.microsoft.reef.io.data.loading.api.DataLoadingRequestBuilder;
-import com.microsoft.reef.io.network.nggroup.impl.GroupCommService;
 
 import com.microsoft.reef.runtime.local.client.LocalRuntimeConfiguration;
 import com.microsoft.reef.runtime.yarn.client.YarnClientConfiguration;
@@ -54,11 +53,9 @@ public final class MatMultREEF {
          )
          .build();
     
-     final Configuration groupComConfiguration = GroupCommService.getConfiguration();
 
      final Configuration  driverConfiguration = Tang.Factory.getTang().newConfigurationBuilder(
-    	        dataLoadConfiguration,
-    	        groupComConfiguration)
+    	        dataLoadConfiguration)
     	        .bindNamedParameter(MatMultDriver.Parameters.InputDir.class, inputDir)
     	        .bindNamedParameter(MatMultDriver.Parameters.NumParam.class, ""+numParam)
     	        .bindNamedParameter(MatMultDriver.Parameters.LearnRate.class, ""+learnRate)
